@@ -66,6 +66,23 @@ public class Application extends Controller {
 		SensorActBrokerAPI.deviceSearch.doProcess(request.params.get("body"));
 	}
 
+	// Device template management
+	public static void deviceTemplateAdd() {
+		SensorActBrokerAPI.deviceTemplateAdd.doProcess(request.params.get("body"));
+	}
+
+	public static void deviceTemplateDelete() {
+		SensorActBrokerAPI.deviceTemplateDelete.doProcess(request.params.get("body"));
+	}
+
+	public static void deviceTemplateGet() {
+		SensorActBrokerAPI.deviceTemplateGet.doProcess(request.params.get("body"));
+	}
+
+	public static void deviceTemplateList() {
+		SensorActBrokerAPI.deviceTemplateList.doProcess(request.params.get("body"));
+	}
+
 	// Guard rule management
 	public static void guardRuleAdd() {
 		SensorActBrokerAPI.guardRuleAdd.doProcess(request.params.get("body"));

@@ -56,6 +56,11 @@ public class Const {
 	public static final String API_DEVICE_SEARCH = "device/search";
 	public static final String API_DEVICE_SHARE = "device/share";
 
+	public static final String API_DEVICE_TEMPLATE_ADD = "device/template/add";
+	public static final String API_DEVICE_TEMPLATE_DELETE = "device/template/delete";
+	public static final String API_DEVICE_TEMPLATE_GET = "device/template/get";
+	public static final String API_DEVICE_TEMPLATE_LIST = "device/template/list";
+
 	public static final String API_GUARDRULE_ADD = "guardrule/add";
 	public static final String API_GUARDRULE_DELETE = "guardrule/delete";
 	public static final String API_GUARDRULE_GET = "guardrule/get";

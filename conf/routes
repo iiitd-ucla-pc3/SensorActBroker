@@ -20,6 +20,11 @@ POST    /device/list                            Application.deviceList
 POST    /device/share                           Application.deviceShare
 POST    /device/search                          Application.deviceSearch
 
+POST    /device/template/add                    Application.deviceTemplateAdd
+POST    /device/template/delete                 Application.deviceTemplateDelete
+POST    /device/template/get                    Application.deviceTemplateGet
+POST    /device/template/list                   Application.deviceTemplateList
+
 POST    /guardrule/add                          Application.guardRuleAdd
 POST    /guardrule/delete                       Application.guardRuleDelete
 POST    /guardrule/get                          Application.guardRuleGet
