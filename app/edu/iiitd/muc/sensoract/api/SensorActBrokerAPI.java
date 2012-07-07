@@ -107,7 +107,7 @@ public class SensorActBrokerAPI extends Application {
 	 * @param property
 	 * @return
 	 */
-	protected String getJsonProperty(final JsonObject jsonObj,
+	protected final String getJsonProperty(final JsonObject jsonObj,
 			final String property) {
 
 		if (null != jsonObj && jsonObj.has(property)) {
@@ -157,7 +157,6 @@ public class SensorActBrokerAPI extends Application {
 		return wsResponse.getString();
 	}
 
-	
 	protected String processRequest(final String apiname,
 			final String requestJson) {
 
@@ -232,7 +231,7 @@ public class SensorActBrokerAPI extends Application {
 			response.sendFailure(apiname, ErrorType.ERROR_INVALID_RESPONSE,
 					Const.MSG_NONE);
 		}
-		
+
 		return resJson;
 
 	}
