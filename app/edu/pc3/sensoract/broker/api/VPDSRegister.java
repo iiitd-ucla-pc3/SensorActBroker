@@ -78,12 +78,14 @@ public class VPDSRegister extends SensorActBrokerAPI {
 		
 		try {
 		HttpResponse response = WS.url(vpdsURL)
-                .followRedirects(true)
+                //.followRedirects(true)
                 .post();
 		
-		if(response.getStatus() != 0)
+		System.out.println("response.getStatus() " + response.getStatus());
+		if(response.getStatus() != 200)
 			return false;
 		} catch(Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 		

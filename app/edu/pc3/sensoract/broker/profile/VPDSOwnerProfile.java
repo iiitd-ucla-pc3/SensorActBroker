@@ -66,6 +66,7 @@ public interface VPDSOwnerProfile<T> {
 	 *         otherwise false.
 	 */
 	public boolean isVPDSProfileExists(final VPDSRegisterFormat newVPDS);
+	public boolean isVPDSProfileExists(final UserRegisterFormat newOwner);
 
 	/**
 	 * Retrieves the username corresponding to the given secretkey.
@@ -93,7 +94,7 @@ public interface VPDSOwnerProfile<T> {
 	 *            User name
 	 * @return Secretkey of the user, if already registered, otherwise null.
 	 */
-	// public String getSecretkey(final String username, final String password);
+	public String getSecretkey(final String username, final String password);
 
 	/**
 	 * Retrieves the secretkey corresponding to the given username.

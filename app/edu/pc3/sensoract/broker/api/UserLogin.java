@@ -94,15 +94,22 @@ public class UserLogin extends SensorActBrokerAPI {
 					UserLoginFormat.class);
 			validateRequest(newLogin);
 
-			newLogin.password = userProfile.getHashCode(newLogin.password);
 			String secretkey = userProfile.getSecretkey(newLogin.username,
 					newLogin.password);
 
 			if (null != secretkey) {
-				response.SendSuccess(Const.API_USER_LOGIN, Const.PARAM_OWNER, secretkey);
+				response.SendSuccess(Const.API_USER_LOGIN, Const.PARAM_USER,
+						secretkey);
 			} else {
-				response.sendFailure(Const.API_USER_LOGIN,
-						ErrorType.LOGIN_FAILED, newLogin.username);
+				secretkey = vpdsOwnerProfile.getSecretkey(newLogin.username,
+						newLogin.password);
+				if (null != secretkey) {
+					response.SendSuccess(Const.API_USER_LOGIN,
+							Const.PARAM_OWNER, secretkey);
+				} else {
+					response.sendFailure(Const.API_USER_LOGIN,
+							ErrorType.LOGIN_FAILED, newLogin.username);
+				}
 			}
 
 		} catch (InvalidJsonException e) {

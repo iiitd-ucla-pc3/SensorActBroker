@@ -56,15 +56,13 @@ public class UserRegister extends SensorActBrokerAPI {
 					userProfileJson, UserRegisterFormat.class);
 			validateUserProfile(newUser);
 
-			if (userProfile.isUserProfileExists(newUser)) {
+			if (userProfile.isUserProfileExists(newUser)
+					|| vpdsOwnerProfile.isVPDSProfileExists(newUser)) {
 				response.sendFailure(Const.API_USER_REGISTER,
 						ErrorType.USER_ALREADYEXISTS, newUser.username);
 			}
 
-			newUser.password = userProfile.getHashCode(newUser.password);
-			String secretkey = userProfile.generateNewKey();
-
-			userProfile.addUserProfile(newUser, secretkey);
+			userProfile.addUserProfile(newUser);
 			response.SendSuccess(Const.API_USER_REGISTER,
 					Const.USER_REGISTERED, newUser.username);
 

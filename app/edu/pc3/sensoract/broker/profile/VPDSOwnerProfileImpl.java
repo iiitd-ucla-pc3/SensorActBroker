@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import edu.pc3.sensoract.broker.api.SensorActBrokerAPI;
 import edu.pc3.sensoract.broker.api.request.UserRegisterFormat;
 import edu.pc3.sensoract.broker.api.request.VPDSRegisterFormat;
 import edu.pc3.sensoract.broker.model.UserProfileModel;
@@ -85,10 +86,28 @@ public class VPDSOwnerProfileImpl implements
 	public boolean isVPDSProfileExists(final VPDSRegisterFormat newVPDS) {
 		return !(0 == VPDSOwnerProfileModel.count("byvpdsURL", newVPDS.vpdsURL));
 	}
+	
+	@Override
+	public boolean isVPDSProfileExists(UserRegisterFormat newOwner) {		
+		return !(null == getSecretkey(newOwner.username,newOwner.password));
+	}
 
 	@Override
 	public boolean isRegisteredSecretkey(String secretkey) {
 		return !(0 == VPDSOwnerProfileModel.count("bySecretkey", secretkey));
 	}
+
+	@Override
+	public String getSecretkey(String username, String password) {
+		password = SensorActBrokerAPI.userProfile.getHashCode(password);
+		List<VPDSOwnerProfileModel> userList = VPDSOwnerProfileModel.find(
+				"byVpdsownerAndPassword", username, password).fetchAll();
+		if (null != userList && userList.size() > 0) {
+			return userList.get(0).secretkey;
+		}
+		return null;
+}
+
+
 
 }

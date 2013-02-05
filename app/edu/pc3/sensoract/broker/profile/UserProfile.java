@@ -46,7 +46,7 @@ import java.util.List;
 import edu.pc3.sensoract.broker.api.request.UserRegisterFormat;
 import edu.pc3.sensoract.broker.model.UserProfileModel;
 
-public interface UserProfile <T> {
+public interface UserProfile<T> {
 
 	/**
 	 * Generates unique ids to create secret keys.
@@ -54,7 +54,7 @@ public interface UserProfile <T> {
 	 * @return Unique Id
 	 */
 	public String generateNewKey();
-	
+
 	/**
 	 * Generates MD5 hash key for the given message.
 	 * 
@@ -63,26 +63,26 @@ public interface UserProfile <T> {
 	 * @return MD5 hash key
 	 * @throws Exception
 	 */
-	public String getHashCode(final String message) throws Exception;
-	
+	public String getHashCode(final String message);
+
 	/**
 	 * Stores the new user profile to the repository.
 	 * 
 	 * @param newUser
 	 *            User profile object to persist to the repository
 	 */
-	public boolean addUserProfile(final UserRegisterFormat newUser,
-			final String secretkey);
+	public boolean addUserProfile(final UserRegisterFormat newUser);
 
 	/**
 	 * Retrieves the username corresponding to the given secretkey.
 	 * 
 	 * @param secretkey
 	 *            User name
-	 * @return Username of the secrectkey, if already registered, otherwise null.
+	 * @return Username of the secrectkey, if already registered, otherwise
+	 *         null.
 	 */
 	public String getUsername(final String secretkey);
-	
+
 	/**
 	 * Retrieves the username corresponding to the given email.
 	 * 
@@ -109,7 +109,7 @@ public interface UserProfile <T> {
 	 * @return Secretkey of the user, if already registered, otherwise null.
 	 */
 	public String getSecretkey(final String username);
-	
+
 	/**
 	 * Retrieves the email address corresponding to the given username.
 	 * 
@@ -158,7 +158,7 @@ public interface UserProfile <T> {
 	public List<String> getUserNameList();
 
 	public UserProfileModel getUserProfile(final String secretkey);
-	
+
 	public boolean deleteUserProfile(final String secretkey);
-	
+
 }

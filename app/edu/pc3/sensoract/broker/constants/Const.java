@@ -129,6 +129,7 @@ public class Const {
 	 * API parameter names
 	 */
 	public static final String PARAM_OWNER = "OWNER";
+	public static final String PARAM_USER = "USER";
 	public static final String PARAM_USERNAME = "username";
 	public static final String PARAM_PASSWORD = "password";
 	public static final String PARAM_EMAIL = "email";

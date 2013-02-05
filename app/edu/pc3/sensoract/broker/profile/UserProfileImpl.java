@@ -79,14 +79,15 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	 * @throws Exception
 	 */
 	@Override
-	public String getHashCode(final String message) throws Exception {
+	public String getHashCode(final String message) {
 
 		MessageDigest md = null;
 
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
-			throw e;
+			// throw e;
+			e.printStackTrace();
 		}
 		md.update(message.getBytes());
 
@@ -106,8 +107,10 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	 *            User profile object to persist to the repository
 	 */
 	@Override
-	public boolean addUserProfile(final UserRegisterFormat newUser,
-			final String secretkey) {
+	public boolean addUserProfile(final UserRegisterFormat newUser) {
+
+		newUser.password = getHashCode(newUser.password);
+		String secretkey = generateNewKey();
 
 		UserProfileModel newUserProfile = new UserProfileModel(
 				newUser.username, newUser.password, newUser.email, secretkey);
@@ -161,8 +164,10 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	 * @return Secretkey of the user, if already registered, otherwise null.
 	 */
 	@Override
-	public String getSecretkey(final String username, final String password) {
+	public String getSecretkey(final String username, String password) {
 
+		password = getHashCode(password);
+		
 		List<UserProfileModel> userList = UserProfileModel.find(
 				"byUsernameAndPassword", username, password).fetchAll();
 		if (null != userList && userList.size() > 0) {
