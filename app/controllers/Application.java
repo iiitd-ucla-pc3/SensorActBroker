@@ -47,7 +47,7 @@ import edu.iiitd.muc.sensoract.api.SensorActBrokerAPI;
  * Application class, entry point for all APIs.
  * 
  * @author Pandarasamy Arjunan
- * @version 1.0
+ * @version  1.0
  */
 
 public class Application extends Controller {
