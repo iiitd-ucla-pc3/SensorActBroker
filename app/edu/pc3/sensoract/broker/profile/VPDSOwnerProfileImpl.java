@@ -32,42 +32,63 @@
  *
  */
 /*
- * Name: Application.java
+ * Name: VPDSOwnerProfileImpl.java
  * Project: SensorAct-Broker
  * Version: 1.0
- * Date: 2013-02-05
+ * Date: 2012-04-14
  * Author: Pandarasamy Arjunan
  */
-package controllers;
+package edu.pc3.sensoract.broker.profile;
 
-import edu.pc3.sensoract.broker.api.SensorActBrokerAPI;
-import play.mvc.Controller;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
+import edu.pc3.sensoract.broker.api.request.UserRegisterFormat;
+import edu.pc3.sensoract.broker.api.request.VPDSRegisterFormat;
+import edu.pc3.sensoract.broker.model.UserProfileModel;
+import edu.pc3.sensoract.broker.model.VPDSOwnerProfileModel;
 
 /**
- * Application class, entry point for all APIs.
+ * User profile management, provides methods for managing user profiles.
  * 
  * @author Pandarasamy Arjunan
- * @version  1.0
+ * @version 1.0
  */
 
-public class Application extends Controller {
+public class VPDSOwnerProfileImpl implements
+		VPDSOwnerProfile<VPDSOwnerProfileModel> {
 
-	public static void index() {
-		renderText("Welcome to SensorActBroker!");
+	/**
+	 * Stores the new user profile to the repository.
+	 * 
+	 * @param newUser
+	 *            User profile object to persist to the repository
+	 */
+	@Override
+	public boolean addVPDSOwnerProfile(final UserProfileModel userProfile,
+			final VPDSRegisterFormat newVPDS) {
+
+		VPDSOwnerProfileModel ownerProfileModel = new VPDSOwnerProfileModel(
+				userProfile.secretkey, userProfile.username,
+				userProfile.password, userProfile.email, newVPDS.vpdsname,
+				newVPDS.vpdsURL, newVPDS.ownerkey);
+		ownerProfileModel.save();
+
+		return true;
 	}
 
-	// User profile management
-	public static void userLogin() {
-		SensorActBrokerAPI.userLogin.doProcess(request.params.get("body"));
+	@Override
+	public boolean isVPDSProfileExists(final VPDSRegisterFormat newVPDS) {
+		return !(0 == VPDSOwnerProfileModel.count("byvpdsURL", newVPDS.vpdsURL));
 	}
 
-	public static void userRegister() {
-		SensorActBrokerAPI.userRegister.doProcess(request.params.get("body"));
-	}
-
-	public static void vpdsRegister() {
-		SensorActBrokerAPI.vpdsRegister.doProcess(request.params.get("body"));
+	@Override
+	public boolean isRegisteredSecretkey(String secretkey) {
+		return !(0 == VPDSOwnerProfileModel.count("bySecretkey", secretkey));
 	}
 
 }

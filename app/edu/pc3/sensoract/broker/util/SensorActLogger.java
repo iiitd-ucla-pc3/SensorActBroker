@@ -32,42 +32,90 @@
  *
  */
 /*
- * Name: Application.java
- * Project: SensorAct-Broker
+ * Name: SensorActLogger.java
+ * Project: SensorAct-VPDS
  * Version: 1.0
- * Date: 2013-02-05
+ * Date: 2012-04-14
  * Author: Pandarasamy Arjunan
  */
-package controllers;
-
-import edu.pc3.sensoract.broker.api.SensorActBrokerAPI;
-import play.mvc.Controller;
-
+package edu.pc3.sensoract.broker.util;
 
 /**
- * Application class, entry point for all APIs.
+ * Logger class to log various system messages (informational, warning, error).
  * 
  * @author Pandarasamy Arjunan
- * @version  1.0
+ * @version 1.0
  */
+public class SensorActLogger extends play.Logger {
 
-public class Application extends Controller {
-
-	public static void index() {
-		renderText("Welcome to SensorActBroker!");
+	// TODO: Log level
+	static {
+		// log4j.setLevel(level)
 	}
 
-	// User profile management
-	public static void userLogin() {
-		SensorActBrokerAPI.userLogin.doProcess(request.params.get("body"));
+	/**
+	 * Logs warning messages.
+	 * 
+	 * @param message
+	 *            Message to be logged
+	 */
+	public static void warn(final String message) {
+		log4j.warn(message);
 	}
 
-	public static void userRegister() {
-		SensorActBrokerAPI.userRegister.doProcess(request.params.get("body"));
+	/**
+	 * Logs warning messages.
+	 * 
+	 * @param apiname
+	 *            Apiname corresponding to this log
+	 * @param message
+	 *            Message to be logged
+	 */
+	public static void warn(final String apiname, final String message) {
+		log4j.warn(apiname + ": " + message);
 	}
 
-	public static void vpdsRegister() {
-		SensorActBrokerAPI.vpdsRegister.doProcess(request.params.get("body"));
+	/**
+	 * Logs error messages.
+	 * 
+	 * @param message
+	 *            Message to be logged
+	 */
+	public static void error(final String message) {
+		log4j.error(message);
 	}
 
+	/**
+	 * Logs error messages.
+	 * 
+	 * @param apiname
+	 *            Apiname corresponding to this log
+	 * @param message
+	 *            Message to be logged
+	 */
+	public static void error(final String apiname, final String message) {
+		log4j.error(apiname + ": " + message);
+	}
+
+	/**
+	 * Logs informational messages.
+	 * 
+	 * @param message
+	 *            Message to be logged
+	 */
+	public static void info(final String message) {
+		log4j.info(message);
+	}
+
+	/**
+	 * Logs informational messages.
+	 * 
+	 * @param apiname
+	 *            Apiname corresponding to this log
+	 * @param message
+	 *            Message to be logged
+	 */
+	public static void info(final String apiname, final String message) {
+		log4j.info(apiname + ": " + message);
+	}
 }

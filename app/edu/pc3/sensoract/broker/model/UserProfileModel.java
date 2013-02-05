@@ -32,42 +32,42 @@
  *
  */
 /*
- * Name: Application.java
+ * Name: UserProfileModel.java
  * Project: SensorAct-Broker
  * Version: 1.0
  * Date: 2013-02-05
  * Author: Pandarasamy Arjunan
  */
-package controllers;
+package edu.pc3.sensoract.broker.model;
 
-import edu.pc3.sensoract.broker.api.SensorActBrokerAPI;
-import play.mvc.Controller;
+import java.util.List;
 
+import play.modules.morphia.Model;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
- * Application class, entry point for all APIs.
- * 
+ * Model class for user profile management.
+ *
  * @author Pandarasamy Arjunan
- * @version  1.0
+ * @version 1.0
  */
+@Entity(value = "UserProfile", noClassnameStored = true)
+public class UserProfileModel extends Model {
 
-public class Application extends Controller {
-
-	public static void index() {
-		renderText("Welcome to SensorActBroker!");
+	public String username = null;
+	public String password = null;
+	public String email = null;
+	public String secretkey = null;
+		
+	public UserProfileModel(final String username, final String password,
+			final String email, final String secretkey) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.secretkey = secretkey;
 	}
-
-	// User profile management
-	public static void userLogin() {
-		SensorActBrokerAPI.userLogin.doProcess(request.params.get("body"));
+	
+	UserProfileModel() {
 	}
-
-	public static void userRegister() {
-		SensorActBrokerAPI.userRegister.doProcess(request.params.get("body"));
-	}
-
-	public static void vpdsRegister() {
-		SensorActBrokerAPI.vpdsRegister.doProcess(request.params.get("body"));
-	}
-
 }

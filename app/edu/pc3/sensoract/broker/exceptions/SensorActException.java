@@ -32,42 +32,32 @@
  *
  */
 /*
- * Name: Application.java
- * Project: SensorAct-Broker
+ * Name: SensorActException.java
+ * Project: SensorAct-VPDS
  * Version: 1.0
- * Date: 2013-02-05
+ * Date: 2012-04-14
  * Author: Pandarasamy Arjunan
  */
-package controllers;
-
-import edu.pc3.sensoract.broker.api.SensorActBrokerAPI;
-import play.mvc.Controller;
-
+package edu.pc3.sensoract.broker.exceptions;
 
 /**
- * Application class, entry point for all APIs.
+ * Super class for all SensorAct exceptions
  * 
  * @author Pandarasamy Arjunan
- * @version  1.0
+ * @version 1.0
  */
+public class SensorActException extends Exception {
 
-public class Application extends Controller {
-
-	public static void index() {
-		renderText("Welcome to SensorActBroker!");
+	// TODO: support for sensoract specific methods.
+	public SensorActException() {
+		super();
 	}
 
-	// User profile management
-	public static void userLogin() {
-		SensorActBrokerAPI.userLogin.doProcess(request.params.get("body"));
+	public SensorActException(String message) {
+		super(message);
 	}
 
-	public static void userRegister() {
-		SensorActBrokerAPI.userRegister.doProcess(request.params.get("body"));
+	public SensorActException(String message, Throwable throwable) {
+		super(message,throwable);		
 	}
-
-	public static void vpdsRegister() {
-		SensorActBrokerAPI.vpdsRegister.doProcess(request.params.get("body"));
-	}
-
 }

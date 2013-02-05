@@ -32,42 +32,75 @@
  *
  */
 /*
- * Name: Application.java
- * Project: SensorAct-Broker
+ * Name: UserList.java
+ * Project: SensorAct-VPDS
  * Version: 1.0
- * Date: 2013-02-05
+ * Date: 2012-07-10
  * Author: Pandarasamy Arjunan
  */
-package controllers;
+package edu.pc3.sensoract.broker.api;
 
-import edu.pc3.sensoract.broker.api.SensorActBrokerAPI;
-import play.mvc.Controller;
+import java.util.ArrayList;
+import java.util.List;
 
+import edu.pc3.sensoract.broker.api.request.UserListFormat;
+import edu.pc3.sensoract.broker.constants.Const;
+import edu.pc3.sensoract.broker.enums.ErrorType;
+import edu.pc3.sensoract.broker.exceptions.InvalidJsonException;
 
 /**
- * Application class, entry point for all APIs.
+ * user/list API: Lists all the registered users.
  * 
  * @author Pandarasamy Arjunan
- * @version  1.0
+ * @version 1.0
  */
 
-public class Application extends Controller {
+public class UserList extends SensorActBrokerAPI {
 
-	public static void index() {
-		renderText("Welcome to SensorActBroker!");
+	public List<String> usernames = new ArrayList<String>();
+
+	/**
+	 * Validates userList request attributes. If validation fails, sends
+	 * corresponding failure message to the caller.
+	 * 
+	 * @param userList
+	 *            Login credentials object to validate
+	 */
+	private void validateRequest(final UserListFormat userList) {
+
+		validator.validateSecretKey(userList.secretkey);
+
+		if (validator.hasErrors()) {
+			response.sendFailure(Const.API_USER_LIST,
+					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+		}
+
 	}
 
-	// User profile management
-	public static void userLogin() {
-		SensorActBrokerAPI.userLogin.doProcess(request.params.get("body"));
-	}
+	/**
+	 * Services the user/list API.
+	 * 
+	 * @param userListJson
+	 *            Login credentials in json format
+	 */
+	public final void doProcess(final String userListJson) {
 
-	public static void userRegister() {
-		SensorActBrokerAPI.userRegister.doProcess(request.params.get("body"));
-	}
+		try {
+			UserListFormat userList = convertToRequestFormat(userListJson,
+					UserListFormat.class);
+			validateRequest(userList);
 
-	public static void vpdsRegister() {
-		SensorActBrokerAPI.vpdsRegister.doProcess(request.params.get("body"));
-	}
+			UserList userNameList = new UserList();
+			userNameList.usernames.addAll(userProfile.getUserNameList());
 
+			response.sendJSON(userNameList);
+
+		} catch (InvalidJsonException e) {
+			response.sendFailure(Const.API_USER_LOGIN, ErrorType.INVALID_JSON,
+					e.getMessage());
+		} catch (Exception e) {
+			response.sendFailure(Const.API_USER_LOGIN, ErrorType.SYSTEM_ERROR,
+					e.getMessage());
+		}
+	}
 }

@@ -32,42 +32,49 @@
  *
  */
 /*
- * Name: Application.java
+ * Name: VPDSOwnerProfileModel.java
  * Project: SensorAct-Broker
  * Version: 1.0
  * Date: 2013-02-05
  * Author: Pandarasamy Arjunan
  */
-package controllers;
+package edu.pc3.sensoract.broker.model;
 
-import edu.pc3.sensoract.broker.api.SensorActBrokerAPI;
-import play.mvc.Controller;
+import play.modules.morphia.Model;
 
+import com.google.code.morphia.annotations.Entity;
 
 /**
- * Application class, entry point for all APIs.
+ * Model class for VPDS Owner profile management.
  * 
  * @author Pandarasamy Arjunan
- * @version  1.0
+ * @version 1.0
  */
+@Entity(value = "VPDSOwnerProfile", noClassnameStored = true)
+public class VPDSOwnerProfileModel extends Model {
 
-public class Application extends Controller {
+	public String secretkey = null;
+	public String vpdsowner = null;
+	public String password = null;
+	public String email = null;
 
-	public static void index() {
-		renderText("Welcome to SensorActBroker!");
+	public String vpdsname = null;
+	public String vpdsURL = null;
+	public String vpdsownerkey = null; // ownerkey
+
+	public VPDSOwnerProfileModel(final String secretkey,
+			final String vpdsowner, final String password, final String email,
+			final String vpdsname, final String vpdsURL,
+			final String vpdsownerkey) {
+		this.secretkey = secretkey;
+		this.vpdsowner = vpdsowner;
+		this.password = password;
+		this.email = email;
+		this.vpdsname = vpdsname;
+		this.vpdsURL = vpdsURL;
+		this.vpdsownerkey = vpdsownerkey;
 	}
 
-	// User profile management
-	public static void userLogin() {
-		SensorActBrokerAPI.userLogin.doProcess(request.params.get("body"));
+	VPDSOwnerProfileModel() {
 	}
-
-	public static void userRegister() {
-		SensorActBrokerAPI.userRegister.doProcess(request.params.get("body"));
-	}
-
-	public static void vpdsRegister() {
-		SensorActBrokerAPI.vpdsRegister.doProcess(request.params.get("body"));
-	}
-
 }
