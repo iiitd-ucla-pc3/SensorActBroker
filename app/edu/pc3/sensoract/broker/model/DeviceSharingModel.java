@@ -32,41 +32,77 @@
  *
  */
 /*
- * Name: DeviceShareFormat.java
- * Project: SensorAct-VPDS
+ * Name: UserProfileModel.java
+ * Project: SensorAct-Broker
  * Version: 1.0
- * Date: 2012-05-13
+ * Date: 2013-02-05
  * Author: Pandarasamy Arjunan
  */
-package edu.pc3.sensoract.broker.api.request;
+package edu.pc3.sensoract.broker.model;
+
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
+
+import play.modules.morphia.Model;
+
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
+
+import edu.pc3.sensoract.broker.api.request.DeviceShareFormat;
+import edu.pc3.sensoract.broker.api.request.DeviceShareFormat.Device;
+import edu.pc3.sensoract.broker.api.request.DeviceShareFormat.Permission;
 
 /**
- * Defines the request format for device/share API.
- *
+ * Model class for user profile management.
+ * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class DeviceShareFormat {
-	
+@Entity(value = "DeviceSharingModel", noClassnameStored = true)
+public class DeviceSharingModel extends Model {
+
 	public static class Device {
-		public String devicename = null;	
+		public String devicename = null;
 		public String sensorname = null;
-		public String sensorid = null;	
+		public String sensorid = null;
 		public String actuatorname = null;
-		public String actuatorid = null;		
+		public String actuatorid = null;
 	}
 
 	public static class Permission {
 		public boolean read = false;
 		public boolean write = false;
 	}
-	
-	public String secretkey = null;
 
+	public String voname = null;
 	public String vpdsname = null;
+	public String username = null;
+
 	public Device device = null;
 	public Permission permission = null;
 
-	public String username = null;
+	public DeviceSharingModel(final String voname, final String vpdsname,
+			final String username, final DeviceShareFormat.Device device,
+			final DeviceShareFormat.Permission permission) {
+		
+		this.voname = voname;
+		this.vpdsname = vpdsname;
+		this.username = username;
+		
+		this.device = new Device();
+		this.device.devicename = device.devicename;
+		this.device.sensorname = device.sensorname;
+		this.device.sensorid = device.sensorid;
+		this.device.actuatorname = device.actuatorname;
+		this.device.actuatorid = device.actuatorid;
+		
+		this.permission = new Permission();
+		this.permission.read = permission.read;
+		this.permission.write = permission.write;
+	}
 
+	DeviceSharingModel() {
+	}
 }

@@ -40,10 +40,15 @@
  */
 package edu.pc3.sensoract.broker.api;
 
+import play.libs.WS;
+import play.libs.WS.HttpResponse;
 import edu.pc3.sensoract.broker.api.request.DeviceShareFormat;
+import edu.pc3.sensoract.broker.api.response.ResponseFormat;
 import edu.pc3.sensoract.broker.constants.Const;
 import edu.pc3.sensoract.broker.enums.ErrorType;
 import edu.pc3.sensoract.broker.exceptions.InvalidJsonException;
+import edu.pc3.sensoract.broker.model.DeviceSharingModel;
+import edu.pc3.sensoract.broker.model.VPDSProfileModel;
 
 /**
  * device/share API: Share device profile with others
@@ -71,6 +76,49 @@ public class DeviceShare extends SensorActBrokerAPI {
 		}
 	}
 
+	private void shareDevice(final DeviceShareFormat req) {
+
+		// Step 1: verify the vpdsname
+		VPDSProfileModel vpds = userProfile.getVPDSProfile(req.secretkey,
+				req.vpdsname);
+		if (null == vpds) {
+			response.sendFailure(Const.API_DEVICE_SHARE,
+					ErrorType.VPDS_NO_VPDS_REGISTERED, Const.EMPTY);
+
+		}
+
+		String param = json.toJson(req);
+		System.out.println(param);
+		System.out.println(json.toJson(vpds));
+
+		// Step 2: invoke the VPDS device/share API
+		HttpResponse httpResponse = null;
+		ResponseFormat vpdsResponse = null;
+		try {
+			httpResponse = WS.url(vpds.vpdsURL + "/device/share").body(param).post();
+
+			vpdsResponse = convertToRequestFormat(httpResponse.getString(),
+					ResponseFormat.class);
+
+		} catch (Exception e) {
+			response.sendFailure(Const.API_DEVICE_SHARE,
+					ErrorType.VPDS_CONNECTION_FAILED, e.getMessage());
+		}
+
+		if (Const.SUCCESS != vpdsResponse.statuscode) {
+			//response.sendFailure(Const.API_DEVICE_SHARE,
+				//	ErrorType.VPDS_CONNECTION_FAILED, vpdsResponse.message);
+		}
+
+		System.out.println(httpResponse.getString());
+
+		// Step 3: Update the tables
+		String owner = userProfile.getUsername(req.secretkey);
+		DeviceSharingModel share = new DeviceSharingModel(owner, req.vpdsname,
+				req.username, req.device, req.permission);
+		share.save();
+	}
+
 	/**
 	 * Services the device/share API.
 	 * 
@@ -85,15 +133,22 @@ public class DeviceShare extends SensorActBrokerAPI {
 					deviceShareJson, DeviceShareFormat.class);
 			validateRequest(deviceShareRequest);
 
-/*			if (!userProfile
+			if (!userProfile
 					.isRegisteredSecretkey(deviceShareRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_SHARE,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						deviceShareRequest.secretkey);
 			}
-*/
+
+			if (!userProfile.isOwner(deviceShareRequest.secretkey)) {
+				response.sendFailure(Const.API_DEVICE_SHARE,
+						ErrorType.VPDS_NO_VPDS_REGISTERED, Const.EMPTY);
+			}
+
+			shareDevice(deviceShareRequest);
+
 			// TODO: share device
-			response.SendSuccess(Const.API_DEVICE_SHARE, Const.TODO);
+			response.SendSuccess(Const.API_DEVICE_SHARE, Const.DEVICE_SHARED);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_SHARE,

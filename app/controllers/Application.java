@@ -77,6 +77,10 @@ public class Application extends Controller {
 	public static void vpdsList() {
 		SensorActBrokerAPI.vpdsList.doProcess(request.params.get("body"));
 	}
+	
+	public static void deviceShare() {
+		SensorActBrokerAPI.deviceShare.doProcess(request.params.get("body"));
+	}
 
 	
 }

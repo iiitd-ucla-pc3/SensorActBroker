@@ -170,4 +170,5 @@ public interface UserProfile<T> {
 	public boolean addVPDSProfile(final String secretkey, final VPDSRegisterFormat newVPDS);
 
 	public List<VPDSProfileModel> getVPDSProfileList(final String secretkey);
+	public VPDSProfileModel getVPDSProfile(final String secretkey, final String vpdsname);
 }

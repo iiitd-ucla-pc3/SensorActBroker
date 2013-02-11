@@ -393,9 +393,9 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 			userProfile.vpdslist = new ArrayList<VPDSProfileModel>();
 		}
 
-		VPDSProfileModel newVPDSProfile = new VPDSProfileModel(newVPDS.vpdsname,
-				newVPDS.vpdsURL, newVPDS.ownerkey);
-		
+		VPDSProfileModel newVPDSProfile = new VPDSProfileModel(
+				newVPDS.vpdsname, newVPDS.vpdsURL, newVPDS.ownerkey);
+
 		userProfile.vpdslist.add(newVPDSProfile);
 		userProfile.isowner = true;
 
@@ -409,15 +409,27 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	public boolean isVPDSProfileExists(VPDSRegisterFormat newVPDS) {
 		return !(0 == VPDSProfileModel.count("byvpdsURL", newVPDS.vpdsURL));
 	}
-	
-	public List<VPDSProfileModel> getVPDSProfileList(final String secretkey) {
+
+	public VPDSProfileModel getVPDSProfile(final String secretkey,
+			final String vpdsname) {
 		
+		List<VPDSProfileModel> vpdsList = getVPDSProfileList(secretkey);
+		for(VPDSProfileModel vpds:vpdsList) {
+			if(vpds.vpdsname.equalsIgnoreCase(vpdsname)) {
+				return vpds;
+			}
+		}
+		
+		return null;
+	}
+
+	public List<VPDSProfileModel> getVPDSProfileList(final String secretkey) {
+
 		UserProfileModel userProfile = getUserProfile(secretkey);
-		if(userProfile != null && userProfile.isowner) {
+		if (userProfile != null && userProfile.isowner) {
 			return userProfile.vpdslist;
 		}
 		return null;
 	}
-
 
 }
