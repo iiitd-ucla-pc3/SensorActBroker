@@ -404,7 +404,7 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 		return true;
 	}
 
-	// TODO: is't correct
+	// TODO: is't correct?
 	@Override
 	public boolean isVPDSProfileExists(VPDSRegisterFormat newVPDS) {
 		return !(0 == VPDSProfileModel.count("byvpdsURL", newVPDS.vpdsURL));

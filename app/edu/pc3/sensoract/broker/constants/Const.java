@@ -62,6 +62,7 @@ public class Const {
 
 	public static final String TODO = "Yet to implement. Please stay tuned!";
 
+	public static final String EMPTY = "";
 	public static final String MSG_SUCCESS = "Success";
 	public static final String MSG_FAILED = "Failed";
 	public static final String MSG_ERROR = "Error ";
@@ -70,6 +71,7 @@ public class Const {
 	public static final String DELIM2 = ": ";
 
 	public static final int SUCCESS = 0;
+	
 
 	/*
 	 * API names
@@ -267,7 +269,8 @@ public class Const {
 	public static final String VPDS_ALREADYREGISTERED = "VPDS already registered";	
 	public static final String VPDS_CONNECTION_FAILED = "Unable to connect to VPDS";
 	public static final String VPDS_VERIFICATION_FAILEID = "VPDS verification failed";
-	
+	public static final String VPDS_NO_VPDS_REGISTERED = "No VPDS registered";
+		
 	public static final String KEY_NOTFOUND = "Key not found";
 	public static final String KEY_DELETED = "Key deleted";
 	public static final String KEY_ENABLED = "Key enabled";
