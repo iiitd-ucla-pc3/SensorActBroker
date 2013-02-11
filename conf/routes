@@ -9,6 +9,7 @@ POST    /                                       Application.index
 
 POST    /user/register                          Application.userRegister
 POST    /user/login                             Application.userLogin
+POST    /user/list                              Application.userList
 
 POST    /vpds/register                          Application.vpdsRegister
 POST    /vpds/list                              Application.vpdsList

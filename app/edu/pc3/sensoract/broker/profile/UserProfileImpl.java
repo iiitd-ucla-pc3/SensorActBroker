@@ -311,8 +311,8 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	public List<String> getUserNameList() {
 
 		List<String> userNameList = new ArrayList<String>();
-		List<UserProfileModel> userList = UserProfileModel.findAll();
-
+		List<UserProfileModel> userList = UserProfileModel.find("isowner",
+				false).fetchAll();
 		if (null == userList) {
 			return null;
 		}
