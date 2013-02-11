@@ -91,6 +91,9 @@ public class Const {
 	public static final String API_KEY_ENABLE = "key/enable";
 	public static final String API_KEY_DISABLE = "key/disable";
 
+	public static final String API_DEVICE_USER_SHARED = "device/user/shared";
+	public static final String API_DEVICE_OWNER_SHARED = "device/owner/shared";
+	
 	public static final String API_DEVICE_ADD = "device/add";
 	public static final String API_DEVICE_DELETE = "device/delete";
 	public static final String API_DEVICE_GET = "device/get";

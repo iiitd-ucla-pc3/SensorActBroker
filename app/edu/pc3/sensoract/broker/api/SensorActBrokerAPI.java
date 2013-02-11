@@ -78,6 +78,10 @@ public class SensorActBrokerAPI extends Application {
 	
 	public static DeviceShare deviceShare = new DeviceShare();
 	public static DeviceSearch deviceSearch = new DeviceSearch();
+	
+	public static DeviceUserShared deviceUserShared = new DeviceUserShared();
+	public static DeviceOwnerShared deviceOwnerShared = new DeviceOwnerShared();
+	
 
 	// public static UserProfile userProfile = new UserProfileRDBMS();
 	public static UserProfile userProfile = new UserProfileImpl();

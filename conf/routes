@@ -17,6 +17,9 @@ POST    /vpds/list                              Application.vpdsList
 POST    /device/share                           Application.deviceShare
 POST    /device/search                          Application.deviceSearch
 
+POST    /device/user/shared                     Application.deviceUserShared
+POST    /device/owner/shared                    Application.deviceOwnerShared
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
