@@ -74,7 +74,8 @@ public class SensorActBrokerAPI extends Application {
 	public static UserList userList = new UserList();
 
 	public static VPDSRegister vpdsRegister = new VPDSRegister();
-
+	public static VPDSList vpdsList = new VPDSList();
+	
 	public static DeviceShare deviceShare = new DeviceShare();
 	public static DeviceSearch deviceSearch = new DeviceSearch();
 

@@ -69,4 +69,10 @@ public class Application extends Controller {
 	public static void vpdsRegister() {
 		SensorActBrokerAPI.vpdsRegister.doProcess(request.params.get("body"));
 	}
+
+	public static void vpdsList() {
+		SensorActBrokerAPI.vpdsList.doProcess(request.params.get("body"));
+	}
+
+	
 }

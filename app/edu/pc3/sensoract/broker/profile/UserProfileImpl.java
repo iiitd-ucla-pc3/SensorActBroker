@@ -409,5 +409,15 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	public boolean isVPDSProfileExists(VPDSRegisterFormat newVPDS) {
 		return !(0 == VPDSProfileModel.count("byvpdsURL", newVPDS.vpdsURL));
 	}
+	
+	public List<VPDSProfileModel> getVPDSProfileList(final String secretkey) {
+		
+		UserProfileModel userProfile = getUserProfile(secretkey);
+		if(userProfile != null && userProfile.isowner) {
+			return userProfile.vpdslist;
+		}
+		return null;
+	}
+
 
 }

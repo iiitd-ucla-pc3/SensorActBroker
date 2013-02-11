@@ -80,6 +80,7 @@ public class Const {
 	public static final String API_USER_LIST = "user/list";
 	
 	public static final String API_VPDS_REGISTER = "vpds/register";
+	public static final String API_VPDS_LIST = "vpds/list";
 	
 	//public static final String API_USER_GENERATE_REPOKEY = "user/generate/repokey";
 	public static final String API_KEY_GENERATE = "key/generate";

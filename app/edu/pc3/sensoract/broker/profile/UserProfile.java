@@ -46,6 +46,7 @@ import java.util.List;
 import edu.pc3.sensoract.broker.api.request.UserRegisterFormat;
 import edu.pc3.sensoract.broker.api.request.VPDSRegisterFormat;
 import edu.pc3.sensoract.broker.model.UserProfileModel;
+import edu.pc3.sensoract.broker.model.VPDSProfileModel;
 
 public interface UserProfile<T> {
 
@@ -168,4 +169,5 @@ public interface UserProfile<T> {
 	public boolean isVPDSProfileExists(final VPDSRegisterFormat newVPDS);
 	public boolean addVPDSProfile(final String secretkey, final VPDSRegisterFormat newVPDS);
 
+	public List<VPDSProfileModel> getVPDSProfileList(final String secretkey);
 }
