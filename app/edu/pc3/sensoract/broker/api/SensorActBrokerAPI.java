@@ -55,8 +55,6 @@ import edu.pc3.sensoract.broker.constants.Const;
 import edu.pc3.sensoract.broker.exceptions.InvalidJsonException;
 import edu.pc3.sensoract.broker.profile.UserProfile;
 import edu.pc3.sensoract.broker.profile.UserProfileImpl;
-import edu.pc3.sensoract.broker.profile.VPDSOwnerProfile;
-import edu.pc3.sensoract.broker.profile.VPDSOwnerProfileImpl;
 import edu.pc3.sensoract.broker.util.ParamValidator;
 import edu.pc3.sensoract.broker.util.SensorActLogger;
 
@@ -76,13 +74,12 @@ public class SensorActBrokerAPI extends Application {
 	public static UserList userList = new UserList();
 
 	public static VPDSRegister vpdsRegister = new VPDSRegister();
-		
+
 	public static DeviceShare deviceShare = new DeviceShare();
 	public static DeviceSearch deviceSearch = new DeviceSearch();
 
-	//public static UserProfile userProfile = new UserProfileRDBMS();
+	// public static UserProfile userProfile = new UserProfileRDBMS();
 	public static UserProfile userProfile = new UserProfileImpl();
-	public static VPDSOwnerProfile vpdsOwnerProfile = new VPDSOwnerProfileImpl();
 
 	/*
 	 * API helper references

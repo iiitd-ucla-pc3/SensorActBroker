@@ -46,7 +46,6 @@ import edu.pc3.sensoract.broker.api.request.VPDSRegisterFormat;
 import edu.pc3.sensoract.broker.constants.Const;
 import edu.pc3.sensoract.broker.enums.ErrorType;
 import edu.pc3.sensoract.broker.exceptions.InvalidJsonException;
-import edu.pc3.sensoract.broker.model.UserProfileModel;
 
 /**
  * vpds/register API: Register a VPDS to the broker
@@ -66,6 +65,7 @@ public class VPDSRegister extends SensorActBrokerAPI {
 	 */
 	private void validateVPDSProfile(final VPDSRegisterFormat vpdsProfile) {
 
+		// TODO: add validatations
 		// validator.validateUserName(vpdsProfile.username);
 
 		if (validator.hasErrors()) {
@@ -73,24 +73,24 @@ public class VPDSRegister extends SensorActBrokerAPI {
 					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 		}
 	}
-	
+
 	private boolean checkVPDSStatus(final String vpdsURL) {
-		
+
 		try {
-		HttpResponse response = WS.url(vpdsURL)
-                //.followRedirects(true)
-                .post();
-		
-		System.out.println("response.getStatus() " + response.getStatus());
-		if(response.getStatus() != 200)
-			return false;
-		} catch(Exception e) {
+			HttpResponse response = WS.url(vpdsURL)
+			// .followRedirects(true)
+					.post();
+
+			System.out.println("response.getStatus() " + response.getStatus());
+			if (response.getStatus() != 200)
+				return false;
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		
-		//TODO: verifty the VPDS using owner key
-		//VPDS_CONNECTION_FAILED
+
+		// TODO: verifty the VPDS using owner key
+		// VPDS_CONNECTION_FAILED
 		return true;
 	}
 
@@ -110,27 +110,22 @@ public class VPDSRegister extends SensorActBrokerAPI {
 					userProfileJson, VPDSRegisterFormat.class);
 			validateVPDSProfile(newVPDS);
 
-			if (!userProfile.isRegisteredSecretkey(newVPDS.secretkey)
-					&& !vpdsOwnerProfile
-							.isRegisteredSecretkey(newVPDS.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(newVPDS.secretkey)) {
 				response.sendFailure(Const.API_VPDS_REGISTER,
 						ErrorType.UNREGISTERED_SECRETKEY, newVPDS.secretkey);
 			}
 
-			if (vpdsOwnerProfile.isVPDSProfileExists(newVPDS)) {
+			if (userProfile.isVPDSProfileExists(newVPDS)) {
 				response.sendFailure(Const.API_VPDS_REGISTER,
 						ErrorType.VPDS_ALREADYREGISTERED, newVPDS.vpdsURL);
 			}
 
-			if(!checkVPDSStatus(newVPDS.vpdsURL)) {
+			if (!checkVPDSStatus(newVPDS.vpdsURL)) {
 				response.sendFailure(Const.API_VPDS_REGISTER,
-						ErrorType.VPDS_VERIFICATION_FAILEID, newVPDS.vpdsURL);				
+						ErrorType.VPDS_VERIFICATION_FAILEID, newVPDS.vpdsURL);
 			}
 
-			UserProfileModel userCurrent = userProfile
-					.getUserProfile(newVPDS.secretkey);
-			vpdsOwnerProfile.addVPDSOwnerProfile(userCurrent, newVPDS);
-			userProfile.deleteUserProfile(userCurrent.secretkey);
+			userProfile.addVPDSProfile(newVPDS.secretkey, newVPDS);
 
 			response.SendSuccess(Const.API_VPDS_REGISTER,
 					Const.VPDS_REGISTERED, newVPDS.vpdsname);

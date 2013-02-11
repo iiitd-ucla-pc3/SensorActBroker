@@ -44,6 +44,7 @@ package edu.pc3.sensoract.broker.profile;
 import java.util.List;
 
 import edu.pc3.sensoract.broker.api.request.UserRegisterFormat;
+import edu.pc3.sensoract.broker.api.request.VPDSRegisterFormat;
 import edu.pc3.sensoract.broker.model.UserProfileModel;
 
 public interface UserProfile<T> {
@@ -158,7 +159,13 @@ public interface UserProfile<T> {
 	public List<String> getUserNameList();
 
 	public UserProfileModel getUserProfile(final String secretkey);
+	public UserProfileModel getUserProfile(final String username, final String password);
 
 	public boolean deleteUserProfile(final String secretkey);
+	
+	public boolean isOwner(final String secretkey);
+	
+	public boolean isVPDSProfileExists(final VPDSRegisterFormat newVPDS);
+	public boolean addVPDSProfile(final String secretkey, final VPDSRegisterFormat newVPDS);
 
 }

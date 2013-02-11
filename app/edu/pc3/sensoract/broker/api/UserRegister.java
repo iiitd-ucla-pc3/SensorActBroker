@@ -56,8 +56,7 @@ public class UserRegister extends SensorActBrokerAPI {
 					userProfileJson, UserRegisterFormat.class);
 			validateUserProfile(newUser);
 
-			if (userProfile.isUserProfileExists(newUser)
-					|| vpdsOwnerProfile.isVPDSProfileExists(newUser)) {
+			if (userProfile.isUserProfileExists(newUser)) {
 				response.sendFailure(Const.API_USER_REGISTER,
 						ErrorType.USER_ALREADYEXISTS, newUser.username);
 			}

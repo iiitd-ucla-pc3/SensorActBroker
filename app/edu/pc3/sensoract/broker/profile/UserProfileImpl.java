@@ -49,7 +49,9 @@ import java.util.UUID;
 
 import play.modules.morphia.Model.MorphiaQuery;
 import edu.pc3.sensoract.broker.api.request.UserRegisterFormat;
+import edu.pc3.sensoract.broker.api.request.VPDSRegisterFormat;
 import edu.pc3.sensoract.broker.model.UserProfileModel;
+import edu.pc3.sensoract.broker.model.VPDSProfileModel;
 
 /**
  * User profile management, provides methods for managing user profiles.
@@ -167,7 +169,7 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	public String getSecretkey(final String username, String password) {
 
 		password = getHashCode(password);
-		
+
 		List<UserProfileModel> userList = UserProfileModel.find(
 				"byUsernameAndPassword", username, password).fetchAll();
 		if (null != userList && userList.size() > 0) {
@@ -232,11 +234,11 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 
 		// TODO: Search in keylist also - morphia does not support this!
 		/*
-		 * List<UserProfileModel> userList1 =
-		 * UserProfileModel.q().filter("keylist.key", secretkey)
+		 * List<UserProfileModelOld> userList1 =
+		 * UserProfileModelOld.q().filter("keylist.key", secretkey)
 		 * .filter("keylist.isEnabled", true) .fetchAll();
 		 */
-		// List<UserProfileModel> m =
+		// List<UserProfileModelOld> m =
 		// UserProfile.getUserProfile(keyGenerateFormat.secretkey);
 		// renderJSON(m, new
 		// play.modules.morphia.utils.ModelFactoryGsonAdapter());
@@ -287,8 +289,8 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	 * public static boolean updateBrokerKeys1(final String secretkey, final
 	 * String newSecretkey) {
 	 * 
-	 * List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
-	 * secretkey).fetchAll();
+	 * List<UserProfileModelOld> userList =
+	 * UserProfileModelOld.find("bySecretkey", secretkey).fetchAll();
 	 * 
 	 * if (null == userList || 0 == userList.size()) { return false; }
 	 * 
@@ -335,8 +337,25 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 				key).fetchAll();
 
 		// TODO: if we want to check all the keys
-		// List<UserProfileModel> userList =
-		// UserProfileModel.find("keylist.key",
+		// List<UserProfileModelOld> userList =
+		// UserProfileModelOld.find("keylist.key",
+		// key).fetchAll();
+
+		if (null == userList || 1 != userList.size()) {
+			return null; // something went wrong if userList.size > 1
+		}
+		return userList.get(0);
+	}
+
+	public UserProfileModel getUserProfile(final String username,
+			final String password) {
+
+		List<UserProfileModel> userList = UserProfileModel.find(
+				"byUsernameAndPassword", username, password).fetchAll();
+
+		// TODO: if we want to check all the keys
+		// List<UserProfileModelOld> userList =
+		// UserProfileModelOld.find("keylist.key",
 		// key).fetchAll();
 
 		if (null == userList || 1 != userList.size()) {
@@ -357,6 +376,38 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 		// devicename).delete();
 		mq.delete();
 		return true;
+	}
+
+	@Override
+	public boolean isOwner(final String secretkey) {
+		return getUserProfile(secretkey).isowner;
+	}
+
+	@Override
+	public boolean addVPDSProfile(final String secretkey,
+			final VPDSRegisterFormat newVPDS) {
+
+		UserProfileModel userProfile = getUserProfile(secretkey);
+
+		if (null == userProfile.vpdslist) {
+			userProfile.vpdslist = new ArrayList<VPDSProfileModel>();
+		}
+
+		VPDSProfileModel newVPDSProfile = new VPDSProfileModel(newVPDS.vpdsname,
+				newVPDS.vpdsURL, newVPDS.ownerkey);
+		
+		userProfile.vpdslist.add(newVPDSProfile);
+		userProfile.isowner = true;
+
+		userProfile.save();
+
+		return true;
+	}
+
+	// TODO: is't correct
+	@Override
+	public boolean isVPDSProfileExists(VPDSRegisterFormat newVPDS) {
+		return !(0 == VPDSProfileModel.count("byvpdsURL", newVPDS.vpdsURL));
 	}
 
 }

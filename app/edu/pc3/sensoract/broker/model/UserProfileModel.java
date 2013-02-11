@@ -42,32 +42,41 @@ package edu.pc3.sensoract.broker.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
+
 import play.modules.morphia.Model;
 
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 
 /**
  * Model class for user profile management.
- *
+ * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-@Entity(value = "UserProfile", noClassnameStored = true)
+@Entity(value = "UserProfileModel", noClassnameStored = true)
 public class UserProfileModel extends Model {
 
 	public String username = null;
 	public String password = null;
 	public String email = null;
 	public String secretkey = null;
-		
+	public boolean isowner = false;
+
+	//@OneToMany(mappedBy = "vpdsowner", cascade = CascadeType.ALL)
+	@Embedded
+	public List<VPDSProfileModel> vpdslist = null;
+
 	public UserProfileModel(final String username, final String password,
 			final String email, final String secretkey) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
-		this.secretkey = secretkey;
+		this.secretkey = secretkey;		
 	}
-	
+
 	UserProfileModel() {
 	}
 }
