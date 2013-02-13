@@ -68,5 +68,6 @@ public class DeviceShareFormat {
 	public Permission permission = null;
 
 	public String username = null;
+	public String email = null; // only for the request to vpds
 
 }

@@ -42,9 +42,6 @@ package edu.pc3.sensoract.broker.model;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
-
 import play.modules.morphia.Model;
 
 import com.google.code.morphia.annotations.Embedded;

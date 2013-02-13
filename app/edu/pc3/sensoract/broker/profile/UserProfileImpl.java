@@ -47,6 +47,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Morphia;
+
 import play.modules.morphia.Model.MorphiaQuery;
 import edu.pc3.sensoract.broker.api.request.UserRegisterFormat;
 import edu.pc3.sensoract.broker.api.request.VPDSRegisterFormat;
@@ -309,7 +312,7 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	 */
 	@Override
 	public List<String> getUserNameList() {
-
+		
 		List<String> userNameList = new ArrayList<String>();
 		List<UserProfileModel> userList = UserProfileModel.find("isowner",
 				false).fetchAll();
@@ -408,6 +411,12 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	@Override
 	public boolean isVPDSProfileExists(VPDSRegisterFormat newVPDS) {
 		return !(0 == VPDSProfileModel.count("byvpdsURL", newVPDS.vpdsURL));
+	}
+
+	// TODO: todo.. but when?
+	public boolean isRegisteredVPDS(final String vpdsname) {
+		//UserProfileModel.q().field("").
+		return true;
 	}
 
 	public VPDSProfileModel getVPDSProfile(final String secretkey,

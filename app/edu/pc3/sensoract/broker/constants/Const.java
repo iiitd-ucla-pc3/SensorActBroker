@@ -84,6 +84,8 @@ public class Const {
 	public static final String API_VPDS_REGISTER = "vpds/register";
 	public static final String API_VPDS_LIST = "vpds/list";
 	
+	public static final String API_ACCESSKEY_GET = "accesskey/get";
+	
 	//public static final String API_USER_GENERATE_REPOKEY = "user/generate/repokey";
 	public static final String API_KEY_GENERATE = "key/generate";
 	public static final String API_KEY_DELETE = "key/delete";
@@ -273,6 +275,7 @@ public class Const {
 	public static final String VPDS_CONNECTION_FAILED = "Unable to connect to VPDS";
 	public static final String VPDS_VERIFICATION_FAILEID = "VPDS verification failed";
 	public static final String VPDS_NO_VPDS_REGISTERED = "No VPDS registered";
+	public static final String VPDS_NOTFOUND = "VPDS not found";
 		
 	public static final String KEY_NOTFOUND = "Key not found";
 	public static final String KEY_DELETED = "Key deleted";
@@ -285,6 +288,7 @@ public class Const {
 	public static final String DEVICE_DELETED = "Device successfully deleted";
 	public static final String DEVICE_NOTFOUND = "Device not found";	
 	public static final String DEVICE_NODEVICE_FOUND = "No device found";
+	public static final String DEVICE_NODEVICE_SHARED = "No device shared";
 	
 	public static final String DEVICE_SHARED = "Device shared";
 

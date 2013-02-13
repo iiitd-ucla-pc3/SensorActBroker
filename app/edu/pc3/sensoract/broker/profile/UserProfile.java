@@ -167,6 +167,8 @@ public interface UserProfile<T> {
 	public boolean isOwner(final String secretkey);
 	
 	public boolean isVPDSProfileExists(final VPDSRegisterFormat newVPDS);
+	public boolean isRegisteredVPDS(final String vpdsname);
+	
 	public boolean addVPDSProfile(final String secretkey, final VPDSRegisterFormat newVPDS);
 
 	public List<VPDSProfileModel> getVPDSProfileList(final String secretkey);

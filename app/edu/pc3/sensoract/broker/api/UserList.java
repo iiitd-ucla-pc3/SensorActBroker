@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.pc3.sensoract.broker.api.request.UserListFormat;
+import edu.pc3.sensoract.broker.api.response.UserListResponseFormat;
 import edu.pc3.sensoract.broker.constants.Const;
 import edu.pc3.sensoract.broker.enums.ErrorType;
 import edu.pc3.sensoract.broker.exceptions.InvalidJsonException;
@@ -90,10 +91,9 @@ public class UserList extends SensorActBrokerAPI {
 					UserListFormat.class);
 			validateRequest(userList);
 
-			UserList userNameList = new UserList();
-			userNameList.usernames.addAll(userProfile.getUserNameList());
-
-			response.sendJSON(userNameList);
+			UserListResponseFormat out = new UserListResponseFormat();
+			out.usernamelist = userProfile.getUserNameList();			
+			response.sendJSON(out);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_USER_LOGIN, ErrorType.INVALID_JSON,

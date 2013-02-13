@@ -14,6 +14,8 @@ POST    /user/list                              Application.userList
 POST    /vpds/register                          Application.vpdsRegister
 POST    /vpds/list                              Application.vpdsList
 
+POST    /accesskey/get                          Application.accesskeyGet
+
 POST    /device/share                           Application.deviceShare
 POST    /device/search                          Application.deviceSearch
 

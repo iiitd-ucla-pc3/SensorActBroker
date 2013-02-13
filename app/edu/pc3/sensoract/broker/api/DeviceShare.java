@@ -84,9 +84,11 @@ public class DeviceShare extends SensorActBrokerAPI {
 		if (null == vpds) {
 			response.sendFailure(Const.API_DEVICE_SHARE,
 					ErrorType.VPDS_NO_VPDS_REGISTERED, Const.EMPTY);
-
 		}
 
+		// TODO: am I really mad?
+		req.email = userProfile.getEmail(userProfile.getUsername(req.secretkey));
+		
 		String param = json.toJson(req);
 		System.out.println(param);
 		System.out.println(json.toJson(vpds));
@@ -147,7 +149,6 @@ public class DeviceShare extends SensorActBrokerAPI {
 
 			shareDevice(deviceShareRequest);
 
-			// TODO: share device
 			response.SendSuccess(Const.API_DEVICE_SHARE, Const.DEVICE_SHARED);
 
 		} catch (InvalidJsonException e) {
