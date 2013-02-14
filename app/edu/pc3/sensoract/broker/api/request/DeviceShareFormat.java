@@ -69,5 +69,7 @@ public class DeviceShareFormat {
 
 	public String username = null;
 	public String email = null; // only for the request to vpds
+	public String brokername = null; // only for the request to vpds
+
 
 }

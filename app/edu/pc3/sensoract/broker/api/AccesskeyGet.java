@@ -117,7 +117,8 @@ public class AccesskeyGet extends SensorActBrokerAPI {
 						ErrorType.DEVICE_NODEVICE_SHARED, req.vpdsname);
 			}
 								
-			String msg = "" + req.vpdsname + username + email;			
+			// TODO: broker name
+			String msg = "" +  username + email;			
 			String accesskey = userProfile.getHashCode(msg);
 			
 			//System.out.println(deviceList.size());
