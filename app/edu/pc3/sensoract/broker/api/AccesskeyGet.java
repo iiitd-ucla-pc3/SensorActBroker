@@ -44,11 +44,13 @@ import java.util.List;
 
 import edu.pc3.sensoract.broker.api.request.AccesskeyGetFormat;
 import edu.pc3.sensoract.broker.api.request.VPDSRegisterFormat;
+import edu.pc3.sensoract.broker.api.response.AccesskeyGetResponseFormat;
 import edu.pc3.sensoract.broker.api.response.VPDSListResponseFormat;
 import edu.pc3.sensoract.broker.constants.Const;
 import edu.pc3.sensoract.broker.enums.ErrorType;
 import edu.pc3.sensoract.broker.exceptions.InvalidJsonException;
 import edu.pc3.sensoract.broker.model.DeviceSharingModel;
+import edu.pc3.sensoract.broker.model.VPDSProfileModel;
 
 /**
  * vpds/list API: Register a VPDS to the broker
@@ -121,10 +123,19 @@ public class AccesskeyGet extends SensorActBrokerAPI {
 			String msg = "" +  username + email;			
 			String accesskey = userProfile.getHashCode(msg);
 			
+			VPDSProfileModel vpds = userProfile.getVPDSProfile(req.vpdsname);
+			
+			AccesskeyGetResponseFormat out = new AccesskeyGetResponseFormat();
+			
+			out.accesskey = accesskey;
+			out.vpdsurl = vpds.vpdsURL;
+			
+			response.sendJSON(out);
+			
 			//System.out.println(deviceList.size());
 			//System.out.println(msg + " " + accesskey);
 						
-			response.SendSuccess(Const.API_ACCESSKEY_GET, accesskey);			
+			//response.SendSuccess(Const.API_ACCESSKEY_GET, accesskey);			
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_ACCESSKEY_GET,

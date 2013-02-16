@@ -47,9 +47,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Morphia;
-
 import play.modules.morphia.Model.MorphiaQuery;
 import edu.pc3.sensoract.broker.api.request.UserRegisterFormat;
 import edu.pc3.sensoract.broker.api.request.VPDSRegisterFormat;
@@ -312,7 +309,7 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	 */
 	@Override
 	public List<String> getUserNameList() {
-		
+
 		List<String> userNameList = new ArrayList<String>();
 		List<UserProfileModel> userList = UserProfileModel.find("isowner",
 				false).fetchAll();
@@ -415,20 +412,48 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 
 	// TODO: todo.. but when?
 	public boolean isRegisteredVPDS(final String vpdsname) {
-		//UserProfileModel.q().field("").
+		// UserProfileModel.q().field("").
 		return true;
 	}
 
 	public VPDSProfileModel getVPDSProfile(final String secretkey,
 			final String vpdsname) {
-		
+
 		List<VPDSProfileModel> vpdsList = getVPDSProfileList(secretkey);
-		for(VPDSProfileModel vpds:vpdsList) {
-			if(vpds.vpdsname.equalsIgnoreCase(vpdsname)) {
+		for (VPDSProfileModel vpds : vpdsList) {
+			if (vpds.vpdsname.equalsIgnoreCase(vpdsname)) {
 				return vpds;
 			}
 		}
-		
+
+		return null;
+	}
+
+	// TODO: is't correct
+	public VPDSProfileModel getVPDSProfile(final String vpdsname) {
+
+		List<String> userNameList = new ArrayList<String>();
+		List<UserProfileModel> userList = UserProfileModel
+				.find("isowner", true).fetchAll();
+		if (null == userList) {
+			return null;
+		}
+
+		/*
+		 * Query<Person> personQuery = ds.createQuery(Person.class);
+		 * Query<Address> addressQuery = ds.createQuery(Address.class);
+		 * addressQuery.criteria("streetName").containsIgnoreCase("mainstreet");
+		 * container
+		 * .add(personQuery.criteria("addresses").in(addressQuery.asKeyList()));
+		 * System.out.println(personQuery.asList());
+		 */
+
+		for (UserProfileModel up : userList) {
+			for (VPDSProfileModel vp : up.vpdslist) {
+				if (vp.vpdsname.equals(vpdsname))
+					return vp;
+			}
+		}
 		return null;
 	}
 
