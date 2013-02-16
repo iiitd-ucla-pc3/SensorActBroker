@@ -75,6 +75,7 @@ public class SensorActBrokerAPI extends Application {
 
 	public static VPDSRegister vpdsRegister = new VPDSRegister();
 	public static VPDSList vpdsList = new VPDSList();
+	public static VPDSGet vpdsGet = new VPDSGet();
 	
 	public static AccesskeyGet accesskeyGet = new AccesskeyGet();
 		

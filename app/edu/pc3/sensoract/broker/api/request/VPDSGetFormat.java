@@ -32,75 +32,23 @@
  *
  */
 /*
- * Name: Application.java
+ * Name: VPDSRegisterFormat.java
  * Project: SensorAct-Broker
  * Version: 1.0
  * Date: 2013-02-05
  * Author: Pandarasamy Arjunan
  */
-package controllers;
-
-import edu.pc3.sensoract.broker.api.SensorActBrokerAPI;
-import play.mvc.Controller;
-
+package edu.pc3.sensoract.broker.api.request;
 
 /**
- * Application class, entry point for all APIs.
+ * Defines the request format for vpds/register API.
  * 
  * @author Pandarasamy Arjunan
- * @version  1.0
+ * @version 1.0
  */
+public class VPDSGetFormat {
 
-public class Application extends Controller {
+	public String secretkey = null;
+	public String vpdsname = null;
 
-	public static void index() {
-		renderText("Welcome to SensorActBroker!");
-	}
-	
-	private static String getParam() {
-		return request.params.get("body");
-	}
-
-	// User profile management
-	public static void userLogin() {
-		SensorActBrokerAPI.userLogin.doProcess(request.params.get("body"));
-	}
-
-	public static void userRegister() {
-		SensorActBrokerAPI.userRegister.doProcess(request.params.get("body"));
-	}
-
-	public static void userList() {
-		SensorActBrokerAPI.userList.doProcess(request.params.get("body"));
-	}
-
-	public static void vpdsRegister() {
-		SensorActBrokerAPI.vpdsRegister.doProcess(request.params.get("body"));
-	}
-
-	public static void vpdsGet() {
-		SensorActBrokerAPI.vpdsGet.doProcess(request.params.get("body"));
-	}
-
-	public static void vpdsList() {
-		SensorActBrokerAPI.vpdsList.doProcess(request.params.get("body"));
-	}
-	
-	public static void accesskeyGet() {
-		SensorActBrokerAPI.accesskeyGet.doProcess(getParam());
-	}
-
-	public static void deviceShare() {
-		SensorActBrokerAPI.deviceShare.doProcess(request.params.get("body"));
-	}
-
-	public static void deviceUserShared() {
-		SensorActBrokerAPI.deviceUserShared.doProcess(request.params.get("body"));
-	}
-
-	public static void deviceOwnerShared() {
-		SensorActBrokerAPI.deviceOwnerShared.doProcess(request.params.get("body"));
-	}
-
-	
 }
