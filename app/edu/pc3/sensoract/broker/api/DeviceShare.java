@@ -90,6 +90,7 @@ public class DeviceShare extends SensorActBrokerAPI {
 		req.email = userProfile
 				.getEmail(userProfile.getUsername(req.secretkey));
 
+		String reqSecretkey = req.secretkey;
 		// udpate the secretkey with the correcpoding vpds owner key
 		req.secretkey = vpds.vpdsownerkey;
 
@@ -120,7 +121,7 @@ public class DeviceShare extends SensorActBrokerAPI {
 		System.out.println(httpResponse.getString());
 
 		// Step 3: Update the tables
-		String owner = userProfile.getUsername(req.secretkey);
+		String owner = userProfile.getUsername(reqSecretkey);
 		DeviceSharingModel share = new DeviceSharingModel(owner, req.vpdsname,
 				req.username, req.device, req.permission);
 		share.save();
