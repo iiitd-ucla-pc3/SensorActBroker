@@ -57,8 +57,8 @@ public class Const {
 	public static final String repoURL = "http://localhost:9000/";
 	//public static final String repoURL = "http:muc.iiitd.com:9000/";
 	
-	public static final String SENSORACT = "SensorAct";
-	public static final String APPLICATION_NAME = SENSORACT;
+	public static final String SENSORACT_BROKER = "SensorActBroker";
+	public static final String APPLICATION_NAME = SENSORACT_BROKER;
 
 	public static final String TODO = "Yet to implement. Please stay tuned!";
 

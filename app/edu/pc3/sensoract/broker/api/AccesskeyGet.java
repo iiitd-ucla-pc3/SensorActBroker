@@ -120,7 +120,7 @@ public class AccesskeyGet extends SensorActBrokerAPI {
 			}
 								
 			// TODO: broker name
-			String msg = "" +  username + email;			
+			String msg = Const.SENSORACT_BROKER +  username + email;			
 			String accesskey = userProfile.getHashCode(msg);
 			
 			VPDSProfileModel vpds = userProfile.getVPDSProfile(req.vpdsname);

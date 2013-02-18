@@ -93,6 +93,7 @@ public class DeviceShare extends SensorActBrokerAPI {
 		String reqSecretkey = req.secretkey;
 		// udpate the secretkey with the correcpoding vpds owner key
 		req.secretkey = vpds.vpdsownerkey;
+		req.brokername =  Const.SENSORACT_BROKER;
 
 		String param = json.toJson(req);
 		System.out.println(param);
