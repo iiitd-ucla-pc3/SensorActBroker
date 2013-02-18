@@ -40,6 +40,8 @@
  */
 package edu.pc3.sensoract.broker.constants;
 
+import play.Play;
+
 /**
  * Defines various constants. 
  * 
@@ -57,7 +59,7 @@ public class Const {
 	public static final String repoURL = "http://localhost:9000/";
 	//public static final String repoURL = "http:muc.iiitd.com:9000/";
 	
-	public static final String SENSORACT_BROKER = "SensorActBroker";
+	public static final String SENSORACT_BROKER = "SensorActBroker" + Play.configuration.getProperty("application.name");
 	public static final String APPLICATION_NAME = SENSORACT_BROKER;
 
 	public static final String TODO = "Yet to implement. Please stay tuned!";
