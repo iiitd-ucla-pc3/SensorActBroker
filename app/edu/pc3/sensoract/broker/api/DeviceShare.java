@@ -87,8 +87,12 @@ public class DeviceShare extends SensorActBrokerAPI {
 		}
 
 		// TODO: am I really mad?
-		req.email = userProfile.getEmail(userProfile.getUsername(req.secretkey));
-		
+		req.email = userProfile
+				.getEmail(userProfile.getUsername(req.secretkey));
+
+		// udpate the secretkey with the correcpoding vpds owner key
+		req.secretkey = vpds.vpdsownerkey;
+
 		String param = json.toJson(req);
 		System.out.println(param);
 		System.out.println(json.toJson(vpds));
@@ -97,7 +101,8 @@ public class DeviceShare extends SensorActBrokerAPI {
 		HttpResponse httpResponse = null;
 		ResponseFormat vpdsResponse = null;
 		try {
-			httpResponse = WS.url(vpds.vpdsURL + "/device/share").body(param).post();
+			httpResponse = WS.url(vpds.vpdsURL + "device/share").body(param)
+					.post();
 
 			vpdsResponse = convertToRequestFormat(httpResponse.getString(),
 					ResponseFormat.class);
@@ -108,8 +113,8 @@ public class DeviceShare extends SensorActBrokerAPI {
 		}
 
 		if (Const.SUCCESS != vpdsResponse.statuscode) {
-			//response.sendFailure(Const.API_DEVICE_SHARE,
-				//	ErrorType.VPDS_CONNECTION_FAILED, vpdsResponse.message);
+			response.sendFailure(Const.API_DEVICE_SHARE,
+					ErrorType.DEVICE_SHARE_FAILED, vpdsResponse.message);
 		}
 
 		System.out.println(httpResponse.getString());
@@ -148,7 +153,7 @@ public class DeviceShare extends SensorActBrokerAPI {
 			}
 
 			shareDevice(deviceShareRequest);
-
+			// TODO: log
 			response.SendSuccess(Const.API_DEVICE_SHARE, Const.DEVICE_SHARED);
 
 		} catch (InvalidJsonException e) {

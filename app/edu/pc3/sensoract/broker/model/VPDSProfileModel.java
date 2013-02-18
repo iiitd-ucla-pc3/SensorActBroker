@@ -44,8 +44,10 @@ import javax.persistence.ManyToOne;
 
 import play.data.validation.Required;
 import play.modules.morphia.Model;
+import play.modules.morphia.Model.Added;
 
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  * Model class for user profile management.
@@ -53,25 +55,36 @@ import com.google.code.morphia.annotations.Entity;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-@Entity(value = "VPDSProfileModel", noClassnameStored = true)
+@Entity(value = "VPDSProfile", noClassnameStored = true)
 public class VPDSProfileModel extends Model {
 
 	public String vpdsname = null;
 	public String vpdsURL = null;
 	public String vpdsownerkey = null;
 
-	//@Required
-	//@ManyToOne
-	//public UserProfileModel vpdsowner;
+	// @Required
+	// @ManyToOne
+	// public UserProfileModel vpdsowner;
+
+	@Required
+	@ManyToOne
+	public UserProfileModel vpdsowner;
 
 	public VPDSProfileModel(final String vpdsname, final String vpdsURL,
-			final String vpdsownerkey/*, final UserProfileModel vpdsowner*/) {
+			final String vpdsownerkey, final UserProfileModel vpdsowner) {
 		this.vpdsname = vpdsname;
 		this.vpdsURL = vpdsURL;
 		this.vpdsownerkey = vpdsownerkey;
-		//this.vpdsowner = vpdsowner;
+		this.vpdsowner = vpdsowner;
 	}
 
 	VPDSProfileModel() {
 	}
+
+	@Added
+	void cascadeAdd() {
+		System.out.println("adding new vpds to user prfile");
+		vpdsowner.vpdslist.add(this);
+	}
+
 }

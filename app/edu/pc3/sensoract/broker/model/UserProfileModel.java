@@ -40,12 +40,16 @@
  */
 package edu.pc3.sensoract.broker.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 
 import play.modules.morphia.Model;
 
-import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  * Model class for user profile management.
@@ -53,7 +57,7 @@ import com.google.code.morphia.annotations.Entity;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-@Entity(value = "UserProfileModel", noClassnameStored = true)
+@Entity(value = "UserProfile", noClassnameStored = true)
 public class UserProfileModel extends Model {
 
 	public String username = null;
@@ -62,8 +66,8 @@ public class UserProfileModel extends Model {
 	public String secretkey = null;
 	public boolean isowner = false;
 
-	//@OneToMany(mappedBy = "vpdsowner", cascade = CascadeType.ALL)
-	@Embedded
+	@OneToMany(mappedBy = "vpdsowner", cascade = CascadeType.ALL)
+	@Reference
 	public List<VPDSProfileModel> vpdslist = null;
 
 	public UserProfileModel(final String username, final String password,
@@ -71,9 +75,24 @@ public class UserProfileModel extends Model {
 		this.username = username;
 		this.password = password;
 		this.email = email;
-		this.secretkey = secretkey;		
+		this.secretkey = secretkey;
+
+		isowner = false;
+		this.vpdslist = new ArrayList<VPDSProfileModel>();
 	}
 
+	/*
+	 * public void addVPDS() { new VPDSProfileModel("a", "a", "A", this).save();
+	 * }
+	 */
 	UserProfileModel() {
 	}
+
+	@OnDelete
+	void cascadeDelete() {
+		for (VPDSProfileModel v : vpdslist) {
+			v.delete();
+		}
+	}
+
 }

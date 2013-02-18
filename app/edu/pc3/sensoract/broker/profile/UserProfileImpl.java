@@ -47,6 +47,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.code.morphia.Key;
+import com.google.code.morphia.query.Query;
+
 import play.modules.morphia.Model.MorphiaQuery;
 import edu.pc3.sensoract.broker.api.request.UserRegisterFormat;
 import edu.pc3.sensoract.broker.api.request.VPDSRegisterFormat;
@@ -393,18 +396,19 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 			userProfile.vpdslist = new ArrayList<VPDSProfileModel>();
 		}
 
+		// add it to the VPDSProfile
 		VPDSProfileModel newVPDSProfile = new VPDSProfileModel(
-				newVPDS.vpdsname, newVPDS.vpdsURL, newVPDS.ownerkey);
+				newVPDS.vpdsname, newVPDS.vpdsURL, newVPDS.ownerkey,
+				userProfile);
+		newVPDSProfile.save();
 
-		userProfile.vpdslist.add(newVPDSProfile);
+		// Promote the user as owner now
 		userProfile.isowner = true;
-
 		userProfile.save();
 
 		return true;
 	}
 
-	// TODO: is't correct?
 	@Override
 	public boolean isVPDSProfileExists(VPDSRegisterFormat newVPDS) {
 		return !(0 == VPDSProfileModel.count("byvpdsURL", newVPDS.vpdsURL));
@@ -458,12 +462,45 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 	}
 
 	public List<VPDSProfileModel> getVPDSProfileList(final String secretkey) {
+		
+/*		Key<VPDSProfileModel> v = VPDSProfileModel.fin
+		
+	    Query<VPDSProfileModel> personQuery = ds.createQuery(VPDSProfileModel.class);
 
+	    VPDSProfileModel.q()
+*/	    
+	    
 		UserProfileModel userProfile = getUserProfile(secretkey);
-		if (userProfile != null && userProfile.isowner) {
-			return userProfile.vpdslist;
+		
+		Key<UserProfileModel> userList = UserProfileModel.find("Secretkey",
+				secretkey).getKey();
+		
+		
+		System.out.println("..." + userList.toString() + "....." + userList.getId());
+		
+		//List<VPDSProfileModel> vpdsList1  = 
+				VPDSProfileModel.findById(userList.getId());
+		
+		List<VPDSProfileModel> vpdsList = VPDSProfileModel.find("vpdsowner.secretkey", secretkey).fetchAll();
+		
+		/*List<VPDSProfileModel> vpdsList = VPDSProfileModel.find(
+				"vpdsowner", userProfile).fetchAll();
+*/
+		
+		// TODO: modifity
+		for(VPDSProfileModel v: vpdsList)
+		{
+			v.vpdsowner = null;
 		}
-		return null;
+		return vpdsList;
+		
+		/*
+		 * UserProfileModel userProfile = getUserProfile(secretkey); if
+		 * (userProfile != null && userProfile.isowner) {
+		 * System.out.println("inside cond.."); return userProfile.vpdslist; }
+		 * return null;
+		 */
+
 	}
 
 }

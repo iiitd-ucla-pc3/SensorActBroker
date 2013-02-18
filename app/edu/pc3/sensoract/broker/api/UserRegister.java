@@ -69,6 +69,7 @@ public class UserRegister extends SensorActBrokerAPI {
 			response.sendFailure(Const.API_USER_REGISTER,
 					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.sendFailure(Const.API_USER_REGISTER,
 					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
