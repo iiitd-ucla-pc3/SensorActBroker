@@ -128,37 +128,85 @@ public class DeviceSharingModel extends Model {
 
 	private void updateSharedDevice(final DeviceShareFormat.Share req) {
 
-		SharedDevice sharedShared = null;
+		SharedDevice sharedDevice = null;
 
 		// locate the device
 		for (SharedDevice s : this.shared) {
 			if (s.devicename.equalsIgnoreCase(req.devicename)) {
-				sharedShared = s;
+				sharedDevice = s;
 				break;
 			}
 		}
 
-		// if no device found, its a new device to share.. so add new device share info and return
-		if (null == sharedShared) {
+		// if no device found, its a new device to share.. so add new device
+		// share info and return
+		if (null == sharedDevice) {
+			System.out.println("sharedShared...  is null ");
 			addSharedDeviceInfo(req);
 			return;
 		}
 
-		// locate the sensor and update its read and write attributes
-		for (Sensor s : sharedShared.sensors) {
-			if (s.sensorname.equalsIgnoreCase(req.sensorname)
-					&& s.sensorid.equalsIgnoreCase(req.sensorid)) {
-				s.read = req.read;
-				s.write = req.write;
+		if (req.sensorname != null && req.sensorid != null) {
+
+			System.out.println("sharedShared... locating sensor"
+					+ sharedDevice.devicename);
+
+			// locate the sensor and update its read and write attributes
+			Sensor nSensor = null;
+			for (Sensor s : sharedDevice.sensors) {
+				if (s.sensorname.equalsIgnoreCase(req.sensorname)
+						&& s.sensorid.equalsIgnoreCase(req.sensorid)) {
+					nSensor = s;
+					s.read = req.read;
+					s.write = req.write;
+					break;
+				}
+			}
+			// not able to locate the sensor.. means request is for new sensor
+			if (null == nSensor) {
+				nSensor = new Sensor();
+				nSensor.sensorname = req.sensorname;
+				nSensor.sensorid = req.sensorid;
+				nSensor.read = req.read;
+				nSensor.write = req.write;
+
+				if (null == sharedDevice.sensors) {
+					sharedDevice.sensors = new ArrayList<Sensor>();
+				}
+				sharedDevice.sensors.add(nSensor);
+				return;
 			}
 		}
 
-		// locate the Actuator and update its read and write attributes
-		for (Actuator a : sharedShared.actuators) {
-			if (a.actuatorname.equalsIgnoreCase(req.actuatorname)
-					&& a.actuatorid.equalsIgnoreCase(req.actuatorid)) {
-				a.read = req.read;
-				a.write = req.write;
+		if (req.actuatorname != null && req.actuatorid != null) {
+
+			System.out.println("sharedShared... locating actt..."
+					+ sharedDevice.devicename);
+
+			// locate the Actuator and update its read and write attributes
+			Actuator nActuator = null;
+			for (Actuator a : sharedDevice.actuators) {
+				if (a.actuatorname.equalsIgnoreCase(req.actuatorname)
+						&& a.actuatorid.equalsIgnoreCase(req.actuatorid)) {
+					nActuator = a;
+					a.read = req.read;
+					a.write = req.write;
+					break;
+				}
+			}
+
+			// not able to locate the sensor.. means request is for new sensor
+			if (null == nActuator) {
+				nActuator = new Actuator();
+				nActuator.actuatorname = req.actuatorname;
+				nActuator.actuatorid = req.actuatorid;
+				nActuator.read = req.read;
+				nActuator.write = req.write;
+
+				if (null == sharedDevice.actuators) {
+					sharedDevice.actuators = new ArrayList<Actuator>();
+				}
+				sharedDevice.actuators.add(nActuator);
 			}
 		}
 	}
@@ -202,6 +250,7 @@ public class DeviceSharingModel extends Model {
 
 		if (sharedList.size() > 1) {
 			// TODO: something went wrong
+			System.out.println("Something went wrong");
 		}
 
 		// check for duplicate share
@@ -228,6 +277,7 @@ public class DeviceSharingModel extends Model {
 			newShare = new DeviceSharingModel(voname, reqShare);
 		} else {
 			newShare = sharedList.get(0);
+			System.out.println("newShare = sharedList.get(0);");
 			newShare.updateSharedDevice(reqShare.share);
 		}
 		newShare.save();

@@ -95,9 +95,8 @@ public class DeviceShare extends SensorActBrokerAPI {
 					ErrorType.VPDS_NO_VPDS_REGISTERED, Const.EMPTY);
 		}
 
-		// TODO: am I really mad?
-		reqShare.email = userProfile.getEmail(userProfile
-				.getUsername(reqShare.secretkey));
+		
+		reqShare.email = userProfile.getEmail(reqShare.username);
 
 		String reqSecretkey = reqShare.secretkey;
 		// udpate the secretkey with the correcpoding vpds owner key
@@ -169,6 +168,7 @@ public class DeviceShare extends SensorActBrokerAPI {
 			response.sendFailure(Const.API_DEVICE_SHARE,
 					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();			
 			response.sendFailure(Const.API_DEVICE_SHARE,
 					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}

@@ -123,6 +123,8 @@ public class AccesskeyGet extends SensorActBrokerAPI {
 			String msg = Const.SENSORACT_BROKER +  username + email;			
 			String accesskey = userProfile.getHashCode(msg);
 			
+			System.out.println("\n Access key created!!!  " + accesskey +"\n");
+			
 			VPDSProfileModel vpds = userProfile.getVPDSProfile(req.vpdsname);
 			
 			AccesskeyGetResponseFormat out = new AccesskeyGetResponseFormat();
