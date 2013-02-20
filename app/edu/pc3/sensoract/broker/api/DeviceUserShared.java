@@ -58,8 +58,6 @@ import edu.pc3.sensoract.broker.model.DeviceSharingModel;
 
 public class DeviceUserShared extends SensorActBrokerAPI {
 
-	public List<DeviceSharingModel> devicelist = null;
-	
 	/**
 	 * Validates login credentials. If validation fails, sends corresponding
 	 * failure message to the caller.
@@ -91,22 +89,32 @@ public class DeviceUserShared extends SensorActBrokerAPI {
 			validateRequest(req);
 
 			String username = userProfile.getUsername(req.secretkey);
-			
+
 			if (null == username) {
 				response.sendFailure(Const.API_DEVICE_USER_SHARED,
 						ErrorType.UNREGISTERED_SECRETKEY, req.secretkey);
 			}
-			
+
 			System.out.println("username " + username);
-			DeviceUserShared out = new DeviceUserShared();			
-			out.devicelist = DeviceSharingModel.find("username", username).fetchAll();
-			response.sendJSON(out);
-			
-/*			if (!userProfile.isOwner(req.secretkey)) {
+
+			List<DeviceSharingModel> listShared = DeviceSharingModel.find(
+					"username", username).fetchAll();
+
+			if (null == listShared || listShared.isEmpty()) {
 				response.sendFailure(Const.API_DEVICE_USER_SHARED,
-						ErrorType.VPDS_NO_VPDS_REGISTERED, Const.EMPTY);
+						ErrorType.DEVICE_NODEVICE_SHARED, Const.EMPTY);
 			}
-*/
+
+			// DeviceUserShared out = new DeviceUserShared();
+			// out.devicelist = DeviceSharingModel.find("username",
+			// username).fetchAll();
+			response.sendJSON(listShared.get(0));
+
+			/*
+			 * if (!userProfile.isOwner(req.secretkey)) {
+			 * response.sendFailure(Const.API_DEVICE_USER_SHARED,
+			 * ErrorType.VPDS_NO_VPDS_REGISTERED, Const.EMPTY); }
+			 */
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_USER_SHARED,

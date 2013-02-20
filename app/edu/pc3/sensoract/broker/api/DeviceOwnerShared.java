@@ -58,8 +58,6 @@ import edu.pc3.sensoract.broker.model.DeviceSharingModel;
 
 public class DeviceOwnerShared extends SensorActBrokerAPI {
 
-	public List<DeviceSharingModel> devicelist = null;
-
 	/**
 	 * Validates login credentials. If validation fails, sends corresponding
 	 * failure message to the caller.
@@ -101,9 +99,18 @@ public class DeviceOwnerShared extends SensorActBrokerAPI {
 						ErrorType.VPDS_NO_VPDS_REGISTERED, Const.EMPTY);
 			}
 
-			DeviceUserShared out = new DeviceUserShared();
-			out.devicelist = DeviceSharingModel.find("voname", ownername).fetchAll();
-			response.sendJSON(out);
+			List<DeviceSharingModel> listShared = DeviceSharingModel.find(
+					"voname", ownername).fetchAll();
+
+			if (null == listShared || listShared.isEmpty()) {
+				response.sendFailure(Const.API_DEVICE_OWNER_SHARED,
+						ErrorType.DEVICE_NODEVICE_SHARED, Const.EMPTY);
+			}
+
+			// DeviceUserShared out = new DeviceUserShared();
+			// out.devicelist = DeviceSharingModel.find("username",
+			// username).fetchAll();
+			response.sendJSON(listShared.get(0));
 
 			/*
 			 * if (!userProfile.isOwner(req.secretkey)) {
