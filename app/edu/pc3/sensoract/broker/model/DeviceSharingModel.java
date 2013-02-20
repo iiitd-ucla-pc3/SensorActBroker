@@ -40,19 +40,14 @@
  */
 package edu.pc3.sensoract.broker.model;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
 
 import play.modules.morphia.Model;
 
-import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 
 import edu.pc3.sensoract.broker.api.request.DeviceShareFormat;
-import edu.pc3.sensoract.broker.api.request.DeviceShareFormat.Device;
-import edu.pc3.sensoract.broker.api.request.DeviceShareFormat.Permission;
 
 /**
  * Model class for user profile management.
@@ -63,44 +58,180 @@ import edu.pc3.sensoract.broker.api.request.DeviceShareFormat.Permission;
 @Entity(value = "DeviceSharingModel", noClassnameStored = true)
 public class DeviceSharingModel extends Model {
 
-	public static class Device {
-		public String devicename = null;
+	public static class Sensor {
 		public String sensorname = null;
 		public String sensorid = null;
-		public String actuatorname = null;
-		public String actuatorid = null;
-	}
-
-	public static class Permission {
 		public boolean read = false;
 		public boolean write = false;
+	}
+
+	public static class Actuator {
+		public String actuatorname = null;
+		public String actuatorid = null;
+		public boolean read = false;
+		public boolean write = false;
+	}
+
+	public static class SharedDevice {
+		public String devicename = null;
+		public List<Sensor> sensors = new ArrayList<Sensor>();
+		public List<Actuator> actuators = new ArrayList<Actuator>();
 	}
 
 	public String voname = null;
 	public String vpdsname = null;
 	public String username = null;
+	public List<SharedDevice> shared = new ArrayList<SharedDevice>();
 
-	public Device device = null;
-	public Permission permission = null;
+	private DeviceSharingModel(final String voname,
+			final DeviceShareFormat shareReq) {
 
-	public DeviceSharingModel(final String voname, final String vpdsname,
-			final String username, final DeviceShareFormat.Device device,
-			final DeviceShareFormat.Permission permission) {
-		
 		this.voname = voname;
-		this.vpdsname = vpdsname;
-		this.username = username;
-		
-		this.device = new Device();
-		this.device.devicename = device.devicename;
-		this.device.sensorname = device.sensorname;
-		this.device.sensorid = device.sensorid;
-		this.device.actuatorname = device.actuatorname;
-		this.device.actuatorid = device.actuatorid;
-		
-		this.permission = new Permission();
-		this.permission.read = permission.read;
-		this.permission.write = permission.write;
+		this.vpdsname = shareReq.vpdsname;
+		this.username = shareReq.username;
+
+		addSharedDeviceInfo(shareReq.share);
+	}
+
+	private void addSharedDeviceInfo(final DeviceShareFormat.Share req) {
+
+		SharedDevice newSharedDevice = new SharedDevice();
+		newSharedDevice.devicename = req.devicename;
+
+		if (req.sensorname != null && req.sensorid != null) {
+			Sensor s = new Sensor();
+			s.sensorname = req.sensorname;
+			s.sensorid = req.sensorid;
+			s.read = req.read;
+			s.write = req.write;
+
+			newSharedDevice.sensors = new ArrayList<Sensor>();
+			newSharedDevice.sensors.add(s);
+		}
+
+		if (req.actuatorname != null && req.actuatorid != null) {
+			Actuator a = new Actuator();
+			a.actuatorname = req.actuatorname;
+			a.actuatorid = req.actuatorid;
+			a.read = req.read;
+			a.write = req.write;
+
+			newSharedDevice.actuators = new ArrayList<Actuator>();
+			newSharedDevice.actuators.add(a);
+		}
+
+		if (null == this.shared) {
+			this.shared = new ArrayList<SharedDevice>();
+		}
+		this.shared.add(newSharedDevice);
+	}
+
+	private void updateSharedDevice(final DeviceShareFormat.Share req) {
+
+		SharedDevice sharedShared = null;
+
+		// locate the device
+		for (SharedDevice s : this.shared) {
+			if (s.devicename.equalsIgnoreCase(req.devicename)) {
+				sharedShared = s;
+				break;
+			}
+		}
+
+		// if no device found, its a new device to share.. so add new device share info and return
+		if (null == sharedShared) {
+			addSharedDeviceInfo(req);
+			return;
+		}
+
+		// locate the sensor and update its read and write attributes
+		for (Sensor s : sharedShared.sensors) {
+			if (s.sensorname.equalsIgnoreCase(req.sensorname)
+					&& s.sensorid.equalsIgnoreCase(req.sensorid)) {
+				s.read = req.read;
+				s.write = req.write;
+			}
+		}
+
+		// locate the Actuator and update its read and write attributes
+		for (Actuator a : sharedShared.actuators) {
+			if (a.actuatorname.equalsIgnoreCase(req.actuatorname)
+					&& a.actuatorid.equalsIgnoreCase(req.actuatorid)) {
+				a.read = req.read;
+				a.write = req.write;
+			}
+		}
+	}
+
+	private static boolean checkDuplicateSensors(List<Sensor> sensorList,
+			DeviceShareFormat.Share newShare) {
+		for (Sensor s : sensorList) {
+			if (s.sensorname.equals(newShare.sensorname)
+					&& s.sensorid.equalsIgnoreCase(newShare.sensorid)) {
+				if (s.read == newShare.read && s.write && newShare.write) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static boolean checkDuplicateActuators(List<Actuator> actuatorList,
+			DeviceShareFormat.Share newShare) {
+		for (Actuator a : actuatorList) {
+			if (a.actuatorname.equals(newShare.actuatorname)
+					&& a.actuatorid.equalsIgnoreCase(newShare.actuatorid)) {
+				if (a.read == newShare.read && a.write && newShare.write) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean isDuplicateShare(final String voname,
+			final DeviceShareFormat req) {
+
+		List<DeviceSharingModel> sharedList = DeviceSharingModel.q()
+				.filter("voname", voname).filter("vpdsname", req.vpdsname)
+				.filter("username", req.username).fetchAll();
+
+		if (null == sharedList || sharedList.isEmpty()) {
+			return false;
+		}
+
+		if (sharedList.size() > 1) {
+			// TODO: something went wrong
+		}
+
+		// check for duplicate share
+		for (SharedDevice shared : sharedList.get(0).shared) {
+			if (shared.devicename.equalsIgnoreCase(req.share.devicename)) {
+				if (checkDuplicateSensors(shared.sensors, req.share)
+						|| checkDuplicateActuators(shared.actuators, req.share)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean updateShare(final String voname,
+			final DeviceShareFormat reqShare) {
+
+		List<DeviceSharingModel> sharedList = DeviceSharingModel.q()
+				.filter("voname", voname).filter("vpdsname", reqShare.vpdsname)
+				.filter("username", reqShare.username).fetchAll();
+
+		DeviceSharingModel newShare = null;
+		if (null == sharedList || sharedList.isEmpty()) {
+			newShare = new DeviceSharingModel(voname, reqShare);
+		} else {
+			newShare = sharedList.get(0);
+			newShare.updateSharedDevice(reqShare.share);
+		}
+		newShare.save();
+		return true;
 	}
 
 	DeviceSharingModel() {

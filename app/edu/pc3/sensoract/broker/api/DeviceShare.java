@@ -40,6 +40,8 @@
  */
 package edu.pc3.sensoract.broker.api;
 
+import java.util.List;
+
 import play.libs.WS;
 import play.libs.WS.HttpResponse;
 import edu.pc3.sensoract.broker.api.request.DeviceShareFormat;
@@ -76,26 +78,33 @@ public class DeviceShare extends SensorActBrokerAPI {
 		}
 	}
 
-	private void shareDevice(final DeviceShareFormat req) {
+	private void shareDevice(final DeviceShareFormat reqShare) {
+
+		// Step 0: check for duplicate share
+		String voname = userProfile.getUsername(reqShare.secretkey);
+		if (DeviceSharingModel.isDuplicateShare(voname, reqShare)) {
+			response.sendFailure(Const.API_DEVICE_SHARE,
+					ErrorType.DEVICE_ALREADY_SHARED, reqShare.share.devicename);
+		}
 
 		// Step 1: verify the vpdsname
-		VPDSProfileModel vpds = userProfile.getVPDSProfile(req.secretkey,
-				req.vpdsname);
+		VPDSProfileModel vpds = userProfile.getVPDSProfile(reqShare.secretkey,
+				reqShare.vpdsname);
 		if (null == vpds) {
 			response.sendFailure(Const.API_DEVICE_SHARE,
 					ErrorType.VPDS_NO_VPDS_REGISTERED, Const.EMPTY);
 		}
 
 		// TODO: am I really mad?
-		req.email = userProfile
-				.getEmail(userProfile.getUsername(req.secretkey));
+		reqShare.email = userProfile.getEmail(userProfile
+				.getUsername(reqShare.secretkey));
 
-		String reqSecretkey = req.secretkey;
+		String reqSecretkey = reqShare.secretkey;
 		// udpate the secretkey with the correcpoding vpds owner key
-		req.secretkey = vpds.vpdsownerkey;
-		req.brokername =  Const.SENSORACT_BROKER;
+		reqShare.secretkey = vpds.vpdsownerkey;
+		reqShare.brokername = Const.SENSORACT_BROKER;
 
-		String param = json.toJson(req);
+		String param = json.toJson(reqShare);
 		System.out.println(param);
 		System.out.println(json.toJson(vpds));
 
@@ -123,9 +132,7 @@ public class DeviceShare extends SensorActBrokerAPI {
 
 		// Step 3: Update the tables
 		String owner = userProfile.getUsername(reqSecretkey);
-		DeviceSharingModel share = new DeviceSharingModel(owner, req.vpdsname,
-				req.username, req.device, req.permission);
-		share.save();
+		DeviceSharingModel.updateShare(owner, reqShare);
 	}
 
 	/**

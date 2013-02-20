@@ -292,6 +292,7 @@ public class Const {
 	public static final String DEVICE_NODEVICE_FOUND = "No device found";
 	public static final String DEVICE_NODEVICE_SHARED = "No device shared";
 	public static final String DEVICE_UNABLE_TO_SHARE = "Unable to share device";
+	public static final String DEVICE_ALREADY_SHARED = "Device already shared";
 	
 	public static final String DEVICE_SHARED = "Device shared";
 
