@@ -110,7 +110,7 @@ public class DeviceOwnerShared extends SensorActBrokerAPI {
 			// DeviceUserShared out = new DeviceUserShared();
 			// out.devicelist = DeviceSharingModel.find("username",
 			// username).fetchAll();
-			response.sendJSON(listShared.get(0));
+			response.sendJSON(listShared);
 
 			/*
 			 * if (!userProfile.isOwner(req.secretkey)) {
